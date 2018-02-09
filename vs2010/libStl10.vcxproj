@@ -1,0 +1,245 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{4C96ABFF-D4BA-42A5-A177-8F874C651ED1}</ProjectGuid>
+    <RootNamespace>libStl</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectName>libStl10</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Platform)\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\..\includes\include\</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
+      <DisableSpecificWarnings>4244;4267;4311;4312;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <PostBuildEvent>
+      <Command>mkdir "..\..\..\libraries\Win\vs2010\$(IntDir)"
+copy "$(OutDir)$(ProjectName).lib" "..\..\..\libraries\Win\vs2010\$(IntDir)"
+copy ..\stl*.h ..\..\..\includes\include\
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\..\includes\include\</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
+      <DisableSpecificWarnings>4244;4267;4311;4312;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <PostBuildEvent>
+      <Command>mkdir "..\..\..\libraries\Win\vs2010\$(IntDir)"
+copy "$(OutDir)$(ProjectName).lib" "..\..\..\libraries\Win\vs2010\$(IntDir)"
+copy ..\stl*.h ..\..\..\includes\include\
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>..\..\..\includes\include\</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
+      <DisableSpecificWarnings>4244;4267;4311;4312;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <PostBuildEvent>
+      <Command>mkdir "..\..\..\libraries\Win\vs2010\$(IntDir)"
+copy "$(OutDir)$(ProjectName).lib" "..\..\..\libraries\Win\vs2010\$(IntDir)"
+copy ..\stl*.h ..\..\..\includes\include\
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>..\..\..\includes\include\</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
+      <DisableSpecificWarnings>4244;4267;4311;4312;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <PostBuildEvent>
+      <Command>mkdir "..\..\..\libraries\Win\vs2010\$(IntDir)"
+copy "$(OutDir)$(ProjectName).lib" "..\..\..\libraries\Win\vs2010\$(IntDir)"
+copy ..\stl*.h ..\..\..\includes\include\
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\cSTP.cpp" />
+    <ClCompile Include="..\stlHiresTimer.cpp" />
+    <ClCompile Include="..\stlModbus.cpp" />
+    <ClCompile Include="..\stl_append.c" />
+    <ClCompile Include="..\stl_case.c" />
+    <ClCompile Include="..\stl_compress.cpp" />
+    <ClCompile Include="..\stl_compressLzw.cpp" />
+    <ClCompile Include="..\stl_conio.cpp" />
+    <ClCompile Include="..\stl_crc32.c" />
+    <ClCompile Include="..\stl_crypt.c" />
+    <ClCompile Include="..\stl_CursorLnx.c" />
+    <ClCompile Include="..\stl_CursorWin.c" />
+    <ClCompile Include="..\stl_daemon.c" />
+    <ClCompile Include="..\stl_date.c" />
+    <ClCompile Include="..\stl_delete.c" />
+    <ClCompile Include="..\stl_double.c" />
+    <ClCompile Include="..\stl_event.c" />
+    <ClCompile Include="..\stl_file.c" />
+    <ClCompile Include="..\stl_fileFind.cpp" />
+    <ClCompile Include="..\stl_free.cpp" />
+    <ClCompile Include="..\stl_get.c" />
+    <ClCompile Include="..\stl_getopt.c" />
+    <ClCompile Include="..\stl_httpClient.cpp" />
+    <ClCompile Include="..\stl_httpReply.cpp" />
+    <ClCompile Include="..\stl_inifile.c" />
+    <ClCompile Include="..\stl_integer.c" />
+    <ClCompile Include="..\stl_locate.c" />
+    <ClCompile Include="..\stl_mailUtil.c" />
+    <ClCompile Include="..\stl_math.cpp" />
+    <ClCompile Include="..\stl_md5.c" />
+    <ClCompile Include="..\stl_printf.c" />
+    <ClCompile Include="..\stl_printf_win.c" />
+    <ClCompile Include="..\stl_random.c" />
+    <ClCompile Include="..\stl_ras_win.c" />
+    <ClCompile Include="..\stl_registry.c" />
+    <ClCompile Include="..\stl_rs232.cpp" />
+    <ClCompile Include="..\stl_safeexit.c" />
+    <ClCompile Include="..\stl_smtp.c" />
+    <ClCompile Include="..\stl_spawn.c" />
+    <ClCompile Include="..\stl_sql.c" />
+    <ClCompile Include="..\stl_store.c" />
+    <ClCompile Include="..\stl_strip.c" />
+    <ClCompile Include="..\stl_swap.c" />
+    <ClCompile Include="..\stl_syslog.c" />
+    <ClCompile Include="..\stl_tcpbase.c" />
+    <ClCompile Include="..\stl_tcpdns.c" />
+    <ClCompile Include="..\stl_tcpsrv.c" />
+    <ClCompile Include="..\stl_thread.c" />
+    <ClCompile Include="..\stl_thread_p.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+    </ClCompile>
+    <ClCompile Include="..\stl_timer.c" />
+    <ClCompile Include="..\stl_url.c" />
+    <ClCompile Include="..\stl_win_service.c" />
+    <ClCompile Include="..\stl_win_shmem.c" />
+    <ClCompile Include="..\stl_xml.c" />
+    <ClCompile Include="..\stl_xmlc.cpp" />
+    <ClCompile Include="..\strtl_base.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\internal.h" />
+    <ClInclude Include="..\stlHiresTimer.h" />
+    <ClInclude Include="..\stlModbus.h" />
+    <ClInclude Include="..\stl_compressLzw.h" />
+    <ClInclude Include="..\stl_conio.h" />
+    <ClInclude Include="..\stl_crypt.h" />
+    <ClInclude Include="..\stl_Cursor.h" />
+    <ClInclude Include="..\stl_httpClient.h" />
+    <ClInclude Include="..\stl_httpReply.h" />
+    <ClInclude Include="..\stl_mailUtil.h" />
+    <ClInclude Include="..\stl_math.h" />
+    <ClInclude Include="..\stl_ras.h" />
+    <ClInclude Include="..\stl_rs232.h" />
+    <ClInclude Include="..\stl_sql.h" />
+    <ClInclude Include="..\stl_str.h" />
+    <ClInclude Include="..\stl_strlnx.h" />
+    <ClInclude Include="..\stl_strwin.h" />
+    <ClInclude Include="..\stl_tcp.h" />
+    <ClInclude Include="..\stl_thread.h" />
+    <ClInclude Include="..\stl_xml.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
