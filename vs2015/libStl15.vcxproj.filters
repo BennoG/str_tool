@@ -102,9 +102,6 @@
     <ClCompile Include="..\stl_spawn.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\stl_sql.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\stl_store.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -181,6 +178,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\stl_fileFind.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\stl_sql.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

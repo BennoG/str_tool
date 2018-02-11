@@ -53,7 +53,6 @@ stlHiresTimer.o: stlHiresTimer.cpp stlHiresTimer.h stl_str.h stl_thread.h \
  stl_strlnx.h
 stlModbus.o: stlModbus.cpp stlModbus.h stl_rs232.h stl_str.h stl_thread.h \
  stl_strlnx.h stl_tcp.h stl_crypt.h
-stlResource.o: stlResource.cpp
 stlTftp.o: stlTftp.cpp stlTftp.h stl_tcp.h stl_str.h stl_thread.h \
  stl_strlnx.h stl_crypt.h
 stl_compress.o: stl_compress.cpp stl_str.h stl_thread.h stl_strlnx.h
@@ -69,6 +68,7 @@ stl_httpClient.o: stl_httpClient.cpp stl_httpClient.h stl_str.h \
  stl_thread.h stl_strlnx.h stl_tcp.h stl_crypt.h stl_httpReply.h
 stl_httpReply.o: stl_httpReply.cpp stl_httpReply.h stl_str.h stl_thread.h \
  stl_strlnx.h stl_tcp.h stl_crypt.h
+stl_icmp.o: stl_icmp.cpp stl_thread.h
 stl_math.o: stl_math.cpp stl_math.h stl_str.h stl_thread.h stl_strlnx.h
 stl_rs232.o: stl_rs232.cpp stl_str.h stl_thread.h stl_strlnx.h \
  stl_rs232.h internal.h

@@ -4,7 +4,7 @@ CPP=g++
 ifeq ($(MAKECMDGOALS),debug)
   DEBUG = -g -D_DEBUG
 else
-  DEBUG = -O3
+  DEBUG = -g -O3
 endif
 
 UNAME_P := $(shell uname -p)
@@ -13,11 +13,11 @@ ifneq ($(filter unknow%,$(UNAME_P)),)
 endif
 
 ifneq ($(filter ARM%,$(UNAME_P)),)
-  INSTDIR = ../../libraries/Arm/
+  INSTDIR = ../libs-arm/
   OBJDIR = obj-arm
 endif
 ifneq ($(filter arm%,$(UNAME_P)),)
-  INSTDIR = ../../libraries/Arm/
+  INSTDIR = ../libs-arm/
   OBJDIR = obj-arm
 endif
 ifneq ($(filter aarch64%,$(UNAME_P)),)
@@ -71,12 +71,12 @@ $(PROGS).so: $(OBJS)
 clean:
 	@rm -f $(PROGS).a $(PROGS).so $(PROGS).so.1.0.0 $(OBJSP)
 
-install: depend $(PROGS).a
+install: $(PROGS).a
 	@mkdir -p $(INSTDIR)
-	@mkdir -p ../../includes/include/
-	cp -p $(PROGS).a    $(INSTDIR)
+	@mkdir -p ../include/
+	@cp -p $(PROGS).a    $(INSTDIR)
 	@rm -f $(PROGS).a
-	cp -p stl*.h    ../../includes/include/
+	@cp -p stl*.h    ../include/
 
 debug: install
 

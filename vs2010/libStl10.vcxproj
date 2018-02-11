@@ -73,7 +73,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\includes\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -85,16 +85,16 @@
       <DisableSpecificWarnings>4244;4267;4311;4312;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <PostBuildEvent>
-      <Command>mkdir "..\..\..\libraries\Win\vs2010\$(IntDir)"
-copy "$(OutDir)$(ProjectName).lib" "..\..\..\libraries\Win\vs2010\$(IntDir)"
-copy ..\stl*.h ..\..\..\includes\include\
+      <Command>mkdir "..\..\libs_win2010\$(IntDir)"
+copy "$(OutDir)$(ProjectName).lib" "..\..\libs_win2010\$(IntDir)"
+copy ..\stl_*.h ..\..\include
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\includes\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -106,16 +106,16 @@ copy ..\stl*.h ..\..\..\includes\include\
       <DisableSpecificWarnings>4244;4267;4311;4312;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <PostBuildEvent>
-      <Command>mkdir "..\..\..\libraries\Win\vs2010\$(IntDir)"
-copy "$(OutDir)$(ProjectName).lib" "..\..\..\libraries\Win\vs2010\$(IntDir)"
-copy ..\stl*.h ..\..\..\includes\include\
+      <Command>mkdir "..\..\libs_win2010\$(IntDir)"
+copy "$(OutDir)$(ProjectName).lib" "..\..\libs_win2010\$(IntDir)"
+copy ..\stl_*.h ..\..\include
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\..\..\includes\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeader>
@@ -125,16 +125,16 @@ copy ..\stl*.h ..\..\..\includes\include\
       <DisableSpecificWarnings>4244;4267;4311;4312;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <PostBuildEvent>
-      <Command>mkdir "..\..\..\libraries\Win\vs2010\$(IntDir)"
-copy "$(OutDir)$(ProjectName).lib" "..\..\..\libraries\Win\vs2010\$(IntDir)"
-copy ..\stl*.h ..\..\..\includes\include\
+      <Command>mkdir "..\..\libs_win2010\$(IntDir)"
+copy "$(OutDir)$(ProjectName).lib" "..\..\libs_win2010\$(IntDir)"
+copy ..\stl_*.h ..\..\include
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\..\..\includes\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeader>
@@ -144,9 +144,9 @@ copy ..\stl*.h ..\..\..\includes\include\
       <DisableSpecificWarnings>4244;4267;4311;4312;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <PostBuildEvent>
-      <Command>mkdir "..\..\..\libraries\Win\vs2010\$(IntDir)"
-copy "$(OutDir)$(ProjectName).lib" "..\..\..\libraries\Win\vs2010\$(IntDir)"
-copy ..\stl*.h ..\..\..\includes\include\
+      <Command>mkdir "..\..\libs_win2010\$(IntDir)"
+copy "$(OutDir)$(ProjectName).lib" "..\..\libs_win2010\$(IntDir)"
+copy ..\stl_*.h ..\..\include
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -186,11 +186,12 @@ copy ..\stl*.h ..\..\..\includes\include\
     <ClCompile Include="..\stl_random.c" />
     <ClCompile Include="..\stl_ras_win.c" />
     <ClCompile Include="..\stl_registry.c" />
+    <ClCompile Include="..\stlResource.cpp" />
     <ClCompile Include="..\stl_rs232.cpp" />
     <ClCompile Include="..\stl_safeexit.c" />
     <ClCompile Include="..\stl_smtp.c" />
     <ClCompile Include="..\stl_spawn.c" />
-    <ClCompile Include="..\stl_sql.c" />
+    <ClCompile Include="..\stl_sql.cpp" />
     <ClCompile Include="..\stl_store.c" />
     <ClCompile Include="..\stl_strip.c" />
     <ClCompile Include="..\stl_swap.c" />

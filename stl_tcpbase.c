@@ -88,6 +88,15 @@
 //#  define msWait(a) usleep((a)*1000)
 #endif
 
+#ifdef __linux__
+#  include <signal.h>
+#  define _lxBreak_() raise(SIGTRAP)
+#endif
+#ifdef _WIN32
+#  define _lxBreak_() __debugbreak()
+#endif
+
+
 #include "stl_str.h"
 #include "stl_tcp.h"
 #include "stl_crypt.h"
@@ -367,7 +376,7 @@ struct stlTcpConn *stlTcpInit(int sockFd)
 void stlTcpClear(struct stlTcpConn *stc)
 {
 	if (stc==NULL) return;
-	if (stc->magic != _MagicTcp_) return;
+	if (stc->magic != _MagicTcp_) _lxBreak_();
 	if (stc->sLine){stlFree(stc->sLine); stc->sLine=NULL;}
 	stc->rLen=stc->rOfs=stc->xOfs=0;
 }
@@ -378,7 +387,8 @@ void stlTcpClear(struct stlTcpConn *stc)
 int stlTcpRelease(struct stlTcpConn *stc)
 {
 	if (stc==NULL) return -1;
-	if (stc->magic != _MagicTcp_) return -2;
+	if (stc->magic != _MagicTcp_) _lxBreak_();
+	stc->magic = 0;
 	if (stc->sLine) stlFree(stc->sLine);
 	if (stc->pRxCrypt) stlCryptRelease(stc->pRxCrypt);
 	if (stc->pTxCrypt) stlCryptRelease(stc->pTxCrypt);
@@ -394,7 +404,7 @@ int stlTcpRelease(struct stlTcpConn *stc)
 int stlTcpReleaseNoClose(struct stlTcpConn *stc)
 {
 	if (stc==NULL) return -1;
-	if (stc->magic != _MagicTcp_) return -2;
+	if (stc->magic != _MagicTcp_) _lxBreak_();
 	stc->sockFd=-1;
 	return stlTcpRelease(stc);
 }
@@ -408,7 +418,7 @@ int stlTcpReleaseNoClose(struct stlTcpConn *stc)
 void stlTcpCryptStart(stlTcpConn *stc,PSTLCRYPT pRxCrypt,PSTLCRYPT pTxCrypt)
 {
 	if (stc==NULL) return;
-	if (stc->magic != _MagicTcp_) return;
+	if (stc->magic != _MagicTcp_) _lxBreak_();
 	stc->pRxCrypt = pRxCrypt;
 	stc->pTxCrypt = pTxCrypt;
 	if ((stc->rOfs<stc->rLen)&&(stc->pRxCrypt))	// data in receive buffer description if needed
@@ -432,7 +442,7 @@ int stlTcpGetChar(struct stlTcpConn *stc,int timeout)
 	fd_set fds;
 
 	if (stc==NULL) return -1;
-	if (stc->magic != _MagicTcp_) return -2;
+	if (stc->magic != _MagicTcp_) _lxBreak_();
 	if (stc->sockFd<0) return -99;					// Disconnected
 	if (stc->rOfs>=stc->rLen){						// Read new data from port.
 		if ((stc->iMaxBps>0)&&(stc->rOfs>0)){		// Obey speed limit if it is set
@@ -506,7 +516,7 @@ int stlTcpReadMax(struct stlTcpConn *stc,void *buf,int iLen,int timeout1,int tim
 	char *sBuf=buf;
 	int iOfs=0,iRes=0;
 	if (stc==NULL) return -1;
-	if (stc->magic != _MagicTcp_) return -2;
+	if (stc->magic != _MagicTcp_) _lxBreak_();
 	if (buf==NULL) return -5;
 	while (iOfs<iLen){
 		if (stc->rOfs>=stc->rLen){						// we don't have any data left
@@ -565,7 +575,7 @@ STP stlTcpReadLineEx(struct stlTcpConn *stc,int timeout1,int timeout2,const char
 	int iOfs,iLen,iCnt,iExtra=256,ch;
 	STP Lin;
 	if (stc==NULL) return NULL;
-	if (stc->magic != _MagicTcp_) return NULL;
+	if (stc->magic != _MagicTcp_) _lxBreak_();
 	if (stc->sockFd<0) return NULL;
 
 	if (stc->sLine){						// We already have some data (continue using that)
@@ -650,7 +660,7 @@ int stlTcpFlush(struct stlTcpConn *stc,int timeout)
 
 
 	if (stc==NULL) return -1;
-	if (stc->magic != _MagicTcp_) return -2;
+	if (stc->magic != _MagicTcp_) _lxBreak_();
 	if (stc->sockFd<0){stc->xOfs=0; return -99;}
 	if (stc->xOfs<=0) return 0;
 	buf=stc->xBuf;
@@ -731,7 +741,7 @@ int stlTcpFlush(struct stlTcpConn *stc,int timeout)
 int stlTcpPutChar(struct stlTcpConn *stc,char ch,int timeout)
 {
 	if (stc==NULL) return -1;
-	if (stc->magic != _MagicTcp_) return -2;
+	if (stc->magic != _MagicTcp_) _lxBreak_();
 	stc->xBuf[stc->xOfs++]=ch; 
 	if (stc->xOfs>=(int)sizeof(stc->xBuf))
 	{
@@ -753,7 +763,7 @@ int stlTcpWrite(struct stlTcpConn *stc,const unsigned char *buf,int len,int time
 {
 	int i;
 	if (stc==NULL) return -1;
-	if (stc->magic != _MagicTcp_) return -2;
+	if (stc->magic != _MagicTcp_) _lxBreak_();
 	stlMutexLock(&stc->muxTX);
 	for (i=0;i<len;i++) stlTcpPutChar_I(stc,buf[i],timeout);
 	i=stlTcpFlush(stc,timeout);
@@ -775,7 +785,7 @@ int stlTcpWritef(struct stlTcpConn *stc,int timeout,const char *fmt,...)
 	va_list ap;
 	int iRes;
 	if (stc==NULL) return -1;
-	if (stc->magic != _MagicTcp_) return -2;
+	if (stc->magic != _MagicTcp_) _lxBreak_();
 
 	va_start(ap,fmt);
 	sBuf=stlSetSta(fmt,ap);
@@ -798,7 +808,7 @@ int stlTcpWriteNF(struct stlTcpConn *stc,unsigned char *buf,int len,int timeout)
 {
 	int i;
 	if (stc==NULL) return -1;
-	if (stc->magic != _MagicTcp_) return -2;
+	if (stc->magic != _MagicTcp_) _lxBreak_();
 	stlMutexLock(&stc->muxTX);
 	for (i=0;i<len;i++) stlTcpPutChar_I(stc,buf[i],timeout);
 	stlMutexUnlock(&stc->muxTX);
@@ -819,7 +829,7 @@ int stlTcpWriteNFf(struct stlTcpConn *stc,int timeout,const char *fmt,...)
 	va_list ap;
 	int iRes;
 	if (stc==NULL) return -1;
-	if (stc->magic != _MagicTcp_) return -2;
+	if (stc->magic != _MagicTcp_) _lxBreak_();
 
 	va_start(ap,fmt);
 	sBuf=stlSetSta(fmt,ap);
@@ -994,7 +1004,8 @@ void stlTcpConnectCons(struct stlTcpConn *stca,struct stlTcpConn *stcb)
 void stlUdpRelease(stlUdpConn *suc)
 {
 	if (suc==NULL) return;
-	if (suc->magic != _MagicUdp_) return;
+	if (suc->magic != _MagicUdp_) _lxBreak_();
+	suc->magic = 0;
 	if (suc->sockFd>0) stlTcpCloseSocket(suc->sockFd);
 	memset(suc,0,sizeof(stlUdpConn));
 	free(suc);
@@ -1055,7 +1066,8 @@ stlUdpConn * stlUdpConnectIp(const char *RemoteAddr,unsigned short UdpRemotePort
 int stlUdpBind(stlUdpConn *suc,const char *LocalAddr,unsigned short UdpLocalPort)
 {
 	struct sockaddr_in sAddr;
-	if ((suc == NULL) || (LocalAddr == NULL) || (LocalAddr[0] == 0) || (UdpLocalPort == 0)) return -2;
+	if ((suc == NULL) || (LocalAddr == NULL) || (LocalAddr[0] == 0) /*|| (UdpLocalPort == 0) */) return -2;	// als UdpLocalPort==0 dan is het auto UDP port aan onze kant
+	if (suc->magic != _MagicUdp_) _lxBreak_();
 	memset(&sAddr,0,sizeof(sAddr));
 	sAddr.sin_family      = AF_INET;
 	sAddr.sin_addr.s_addr = inet_addr(LocalAddr);
@@ -1076,6 +1088,7 @@ int stlUdpBindMC(stlUdpConn *suc,const char *LocalAddr,unsigned short UdpLocalPo
 	}mreq;
 	struct sockaddr_in sAddr;
 	if ((suc == NULL) || (LocalAddr == NULL) || (LocalAddr[0] == 0) || (UdpLocalPort == 0)) return -2;
+	if (suc->magic != _MagicUdp_) _lxBreak_();
 	memset(&sAddr,0,sizeof(sAddr));
 	sAddr.sin_family      = AF_INET;
 	sAddr.sin_addr.s_addr = htonl(INADDR_ANY);
@@ -1128,7 +1141,8 @@ int stlUdpSendEx(stlUdpConn *suc,const char *sRemoteIP, unsigned short uRemotePo
 {
 	struct sockaddr_in cltAddr;
 	if (suc==NULL) return -1;
-	if (suc->magic != _MagicUdp_) return -2;
+	if (suc->magic != _MagicUdp_) _lxBreak_();
+	//if (suc->magic != _MagicUdp_) return -2;
 	if (suc->sockFd <=0) return -3;
 	if ((sRemoteIP==NULL)||(sRemoteIP[0]==0)) sRemoteIP=suc->sRemoteHost;
 	if (uRemotePort ==0) uRemotePort=suc->uTxPort;
@@ -1202,7 +1216,8 @@ STP stlUdpRecv(stlUdpConn *suc,int iMsTimeout,int *piErr)
 	STP sData=NULL;
 
 	if (suc==NULL){if (piErr) *piErr=1; return NULL;}
-	if (suc->magic != _MagicUdp_){if (piErr) *piErr=2; return NULL;}
+	if (suc->magic != _MagicUdp_) _lxBreak_();
+//	if (suc->magic != _MagicUdp_){if (piErr) *piErr=2; return NULL;}
 	if (suc->sockFd <=0) {if (piErr) *piErr=3; return NULL;}
 	// all checks are done we can send data
 
@@ -1273,7 +1288,8 @@ int stlUdpServer(stlUdpConn * suc,void (*UdpCallback)(stlUdpConn * suc,STP sRxDa
 	int iErr=0;
 	STP sRxData;
 	if (suc==NULL) return -1;
-	if (suc->magic != _MagicUdp_) return -2;
+	if (suc->magic != _MagicUdp_) _lxBreak_();
+	//if (suc->magic != _MagicUdp_) return -2;
 	if (suc->sockFd <=0) return -3;
 	//if (suc->uRxPort==0) return -4;
 	// all checks are done we can send data
