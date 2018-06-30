@@ -67,7 +67,7 @@ STP stlSetSta(const char *pStr,va_list args_lst)
 		pVA  = _strTlInitVar(iLen);
 #if defined(_WIN32)
 		iRes=_vsnprintf(pVA->sBuf,pVA->iLen-20,pStr,args);
-#elif defined(__linux__)
+#elif defined(__linux__) || defined(__APPLE__)
 		iRes=vsnprintf(pVA->sBuf,pVA->iLen-20,pStr,args);
 #else
 #  error unsupported os

@@ -43,7 +43,7 @@
 #  include <windows.h>
 #endif
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 #  include <termios.h>
 #  include <unistd.h>
 #  include <stdlib.h>
@@ -396,7 +396,7 @@ int stlSerialPutch(int iHandle,char ch)
 
 #endif
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 
 #define _MaxFd_ 25
 
@@ -866,7 +866,7 @@ static int _stlSerialRead(stlSerial *sl,int iTimeOutMSec)
 	return 0;
 }
 #endif
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 static int _stlSerialRead(stlSerial *sl,int iTimeOutMSec)
 {
 	int iLen;

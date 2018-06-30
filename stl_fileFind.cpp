@@ -2,7 +2,7 @@
 #include "stl_str.h"
 #include "stl_fileFind.h"
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 #  include <sys/types.h>
 #  include <sys/stat.h>
 #  include <stdio.h>
@@ -77,7 +77,7 @@ static STP getdir(const char *path)
 }
 
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 
 int stlFindFirst(const char *path,int flags,struct stlFind_t *buf)
 {

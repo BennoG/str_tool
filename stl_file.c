@@ -40,7 +40,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 #  include <unistd.h>
 #  include <sys/stat.h>
 #else

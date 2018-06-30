@@ -732,7 +732,7 @@ int stlThreadStart(void(*thFnc)(void *),int prio,void *Param,const char *name)
 	TD->start_address=thFnc;
 	TD->pData        =Param;
 	if (name) strncpy(TD->sName,name,sizeof(TD->sName)-1);
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 	{
 		pthread_t th;
 		pthread_create(&th,NULL,StartTask,TD);

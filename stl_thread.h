@@ -42,7 +42,7 @@
 #if defined(_WIN32)
 #  include <windows.h>
 #endif
-#if defined(__linux__)
+#if defined(__linux__) || defined(__APPLE__)
 #  include <pthread.h>
 #  ifndef __int64
 #    define __int64 long long
@@ -129,19 +129,17 @@ void stlThreadPriority(int iPrio);
 void stlThreadAbort(void);
 
 /* Mutex structure definition */
+struct stlMutex{
 #if defined(_WIN32)
-struct stlMutex{
 	HANDLE hHandle;
-};
 # define stlMutexInitializer {0}
-#endif
-
-#if defined (__linux__)
-struct stlMutex{
+#elif defined (__linux__) || defined(__APPLE__)
 	pthread_mutex_t mux;
-};
 # define stlMutexInitializer {PTHREAD_MUTEX_INITIALIZER}
+#else
+# error Unsupported OS.
 #endif
+};
 
 typedef struct stlMutex stlMutex;
 
