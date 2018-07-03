@@ -71,7 +71,7 @@ bool ansStlDebug = false;
 #  endif
 #endif
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 #  include <signal.h>
 #  define _lxBreak_() raise(SIGTRAP)
 #endif
@@ -404,7 +404,7 @@ void cST::setA(va_list ar,const char *p)
 		sBuf[iLen + 7] = (char)0x55;
 #if defined(_WIN32)
 		iRes = _vsnprintf(sBuf,iLen,p,args);
-#elif defined(__linux__)
+#elif defined(__linux__) || defined(__APPLE__)
 		iRes=vsnprintf(sBuf,iLen,p,args);
 #else
 #  error unsupported os
@@ -451,7 +451,7 @@ void cST::setA(va_list ar,const wchar_t *p)
 
 #if defined(_WIN32)
 		iRes = _vsnwprintf((WCHAR*)sWBuf,iLen,(WCHAR*)p,args);
-#elif defined(__linux__)
+#elif defined(__linux__) || defined(__APPLE__)
 #  ifdef __GLIBC_PREREQ
 		iRes=vswprintf((wchar_t*)sWBuf,iLen,(wchar_t*)p,args);
 #  else		// hele oude linux versies hebben geen vswprintf

@@ -49,7 +49,7 @@
 #include "stl_str.h"
 #include "stl_sql.h"
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 #  include <signal.h>
 #  define _lxBreak_() raise(SIGTRAP)
 #endif

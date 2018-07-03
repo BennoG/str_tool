@@ -60,7 +60,7 @@ struct str_data{
 
 typedef struct str_data * STP;
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 // include extra Linux functions
 #  include "stl_strlnx.h"
 #endif

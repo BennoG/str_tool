@@ -3,7 +3,7 @@
 #ifdef _WIN32
 
 #endif
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 #  include <dirent.h>
 #endif
 
@@ -26,7 +26,7 @@ struct stlFind_t {
 	WIN32_FIND_DATA FindFileData;
 	HANDLE hFind;
 #endif
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 	DIR *pDIR;
 	STP pad,fzk;
 #endif

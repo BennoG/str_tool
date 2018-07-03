@@ -43,7 +43,7 @@
 
 #include "stl_str.h"
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 /* Convert string to lower case
  */
 char *strlwr(char *p)
