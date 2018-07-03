@@ -63,11 +63,25 @@ typedef struct str_data * STP;
 #if defined(__linux__) || defined(__APPLE__)
 // include extra Linux functions
 #  include "stl_strlnx.h"
+#  include <stdint.h>
 #endif
 
 #ifdef _WIN32
 // include extra Windows functions
 #  include "stl_strwin.h"
+#  if _MSC_VER >= 1600			// VS2010 en hoger
+#    include <stdint.h>
+#  else							// VS2005
+	 typedef signed char		int8_t;
+	 typedef signed short		int16_t;
+	 typedef signed int			int32_t;
+	 typedef signed long long	int64_t;
+
+	 typedef unsigned char       uint8_t;
+	 typedef unsigned short      uint16_t;
+	 typedef unsigned int        uint32_t;
+	 typedef unsigned long long  uint64_t;
+#  endif
 #endif
 
 #define _StrDataUid_	0x5A1234A5
@@ -821,6 +835,9 @@ namespace ansStl
 		cST(va_list ar,const char *p);
 		cST(va_list ar,const wchar_t *p);
 		cST(const cST &src);
+#if _MSC_VER >= 1600			// VS2010 en hoger
+		cST(cST &&src);								// move constructor from function return
+# endif
 		cST(const std::string &src);
 		~cST();
 		/* Insert or delete a number of characters at a specifiek position
@@ -863,6 +880,8 @@ namespace ansStl
 		int  convert(int chZoek,int chRep);
 		int  convert(const char *sZoek,const char *sRep);
 		void strip(int cStrip = ' ');
+		int  replace(int chZoek, int chRep) { return convert(chZoek, chRep); }
+		int  replace(const char *sZoek, const char *sRep) { return convert(sZoek, sRep); }
 
 		/* Ensure only single occurrences of char
 		 *  ch   char te remove from data
@@ -906,6 +925,8 @@ namespace ansStl
 		bool comparei(const char *scmp);
 		bool compareMatch(const char *match);		// compare like dos directory e.g. ben* of b?n*
 		bool compareMatchI(const char *match);		// compare like dos directory e.g. ben* of b?n*
+		bool lt(const ansStl::cST &scmp);
+		bool gt(const ansStl::cST &scmp);
 
 		/* Get value with user delimiter
 		 *  iD1  index to get (neg count from the back)
@@ -931,6 +952,10 @@ namespace ansStl
 		operator const char*() const;
 		operator const unsigned char*();
 		operator const unsigned char*() const;
+		operator  std::string();
+		operator  std::string() const;
+		bool operator < (const cST &cmp);
+		bool operator < (const cST *cmp);
 
 		//cST& operator=(char* szSrc);
 		cST& operator=(const char* szSrc);

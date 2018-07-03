@@ -285,7 +285,7 @@ static int _sqlConnect(struct sqlConTableStruct *pCon)
 	if (iRet) printf("DSNERR=%s\n",sDsn->sBuf);
 #ifdef _DEBUG	
 	else      printf("DSNOK=%s\n" ,sDsn->sBuf);
-	printf("connect ret=%d env=%X dbc=%X\n",iRet,(int)hLocEnv,(int)hLocDbc);
+	printf("connect ret=%d env=%X dbc=%X\n",iRet,(int)(uint64_t)hLocEnv,(int)(uint64_t)hLocDbc);
 #endif
 	stlFree(sRes);
 	stlFree(sDsn);
@@ -635,7 +635,7 @@ static STP _sqlDoQuery(struct sqlConTableStruct *pCon,int *lstId)
 		while (iRes == SQL_NEED_DATA ){
 			iRes = SQLParamData(hStmt,&pToken);
 			if (iRes == SQL_NEED_DATA ){
-				i=((int)pToken)-1;
+				i=((int)((int64_t)pToken))-1;
 				if ((i<0)||(i>=pCon->iParCnt)){
 					SQLPutData(hStmt,NULL,0);
 				}else{

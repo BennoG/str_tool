@@ -146,6 +146,40 @@ STP stlModbusTcp::modbusReadData(int iStart,int iLeng,mbCmd iType,int iTimeOut /
 	return sRes;
 }
 
+STP stlModbusTcp::modbusReadWrite(int iRdStart, int iRdLen, int iWrStart, ansStl::cST &sData, int iTimeOut /* = 250 */)
+{
+	if (_testReconnect() < 0) return NULL;
+
+	stlMutexLock(&conMux);
+	iMsgIdx = ((iMsgIdx + 1) % 1000) + 1000;
+	STP sHdr = _generateReadHdr(iMsgIdx, iRdStart, iRdLen, _modbusReadWriteRegisters);
+	int iWrLen = sData.length() / 2;
+	stlAppendCh(sHdr, (iWrStart >> 8) & 0xFF);
+	stlAppendCh(sHdr, (iWrStart >> 0) & 0xFF);
+	stlAppendCh(sHdr, (iWrLen >> 8) & 0xFF);
+	stlAppendCh(sHdr, (iWrLen >> 0) & 0xFF);
+	iWrLen = iWrLen * 2;
+	stlAppendCh(sHdr, iWrLen);
+	for (int i = 0; i < iWrLen; i++)
+		stlAppendCh(sHdr, sData[i]);
+
+	sHdr->sBuf[5] = sHdr->iLen - 6;
+	int iRes = stlTcpWrite(con, (unsigned char *)sHdr->sBuf, sHdr->iLen, iTimeOut);
+	stlFree(sHdr);
+	if (iRes < 0) {
+		printf("stlModbusTcp::modbusReadWriteData %s:%d timeout", IP.buf(), iPort);
+		stlTcpRelease(con);
+		con = NULL;
+		stlMutexUnlock(&conMux);
+		return NULL;
+	}
+	int iErrCode = 0;
+	STP sRes = _waitReponce(iErrCode, iTimeOut);
+	stlMutexUnlock(&conMux);
+	return sRes;
+}
+
+
 /* Write data to remote Modbus device
 **    iStart  Start adres from where to read
 **    sData   Data to write
@@ -180,6 +214,13 @@ int stlModbusTcp::modbusWriteData(int iStart,STP sData,mbCmd iType,int iTimeOut 
 	return 0;
 }
 
+int stlModbusTcp::modbusWriteData(int iStart, ansStl::cST &sData, mbCmd iType, int iTimeOut/* =250 */)
+{
+	STP da = sData.getStp();
+	int iRes = modbusWriteData(iStart, da, iType, iTimeOut);
+	stlFree(da);
+	return iRes;
+}
 
 
 /************************************************************************/
@@ -234,14 +275,16 @@ STP stlModbusTcp::_waitReponce(int &iError,int iTimeOut /* = 250 */)
 }
 
 
-
-
 int stlModbusTcp::_testReconnect()
 {
 	if (con) return 0;
 	if (IP.length() < 3) return -1;
 	con = stlTcpInit(stlTcpDnsConnectTout(IP,iPort,1000));
-	if (con) return 0;
+	if (con) {
+		printf("stlModbusTcp::modbusConnect %s:%d ok", IP.buf(), iPort);
+		return 0;
+	}
+	printf("stlModbusTcp::modbusConnect %s:%d error", IP.buf(), iPort);
 	return -2;
 }
 

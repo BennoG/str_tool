@@ -77,6 +77,8 @@ void stlPrintfHandler2(void (*userHandler)(struct stlLogInfoStruct*));
 
 // printf redirection in windows
 void stlPrintfSetMsTimes(int iOn);
+void stlPrintfSetLogFn(const char *sLogFn);
+
 
 /* Do printf screen and file handling in a separate low priority thread
 */

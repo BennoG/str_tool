@@ -476,6 +476,8 @@ int stlTcpGetChar(struct stlTcpConn *stc,int timeout)
 		}
 		if (r==0) return -3;						// Timeout
 		if (r< 0) return -4;						// Unknown error
+		if (stc->magic != _MagicTcp_) return -99;	// destroyed by other thread
+		if (stc->sockFd < 0) return -99;			// disconnected from other thread
 		if (FD_ISSET(stc->sockFd, &fds)){
 			len=recv(stc->sockFd,stc->rBuf,sizeof(stc->rBuf),MSG_DONTWAIT);
 			if (len==0){							// Connection lost

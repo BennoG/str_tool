@@ -150,6 +150,22 @@ cST::cST(const cST &strSrc)
 	if (ansStlDebug) printf("new cST 9 (0x%X)",(int)(int64_t)this);
 	set(&strSrc);
 }
+#if _MSC_VER >= 1600			// VS2010 en hoger
+cST::cST(cST &&src)		// move operator
+{
+	initVars();
+	if (src._uid != _StrDataUidC_) _lxBreak_();
+	sBuf = src.sBuf;
+	sWBuf = src.sWBuf;
+	isUTF8 = src.isUTF8;
+	iLen = src.iLen;
+	iLenLoc = src.iLenLoc;
+
+	src.iLen = src.iLenLoc = 0;
+	src.sBuf = NULL;
+	src.sWBuf = NULL;
+}
+#endif
 cST::cST(const std::string &src)
 {
 	initVars();
@@ -179,6 +195,40 @@ cST::operator const unsigned char *() const
 	if (_uid != _StrDataUidC_) _lxBreak_();
 	return (const unsigned char *)((cST*)this)->buf();
 }
+
+ansStl::cST::operator  std::string()
+{
+	if (_uid != _StrDataUidC_) _lxBreak_();
+	return std::string(this->buf());
+}
+ansStl::cST::operator  std::string() const
+{
+	if (_uid != _StrDataUidC_) _lxBreak_();
+	if (sBuf) return std::string(sBuf);
+	return std::string("");
+}
+
+
+bool cST::operator < (const cST &cmp)
+{
+	if (_uid != _StrDataUidC_) _lxBreak_();
+	if ((cmp.sWBuf) && (sWBuf))
+		return (wcscmp(sWBuf, cmp.sWBuf) < 0);
+	if ((cmp.sBuf) && (sBuf))
+		return (strcmp(sBuf, cmp.sBuf) < 0);
+	return false;
+}
+bool cST::operator < (const cST *cmp)
+{
+	if (_uid != _StrDataUidC_) _lxBreak_();
+	if ((cmp->sWBuf) && (sWBuf))
+		return (wcscmp(sWBuf, cmp->sWBuf) < 0);
+	if ((cmp->sBuf) && (sBuf))
+		return (strcmp(sBuf, cmp->sBuf) < 0);
+	return false;
+}
+
+
 
 cST& cST::operator=(const char* src)
 {
@@ -989,6 +1039,26 @@ void cST::delDlm(int iD1,wchar_t cDlm)
 		insDel(iStart,iStart-iEind);
 	}
 }
+
+bool cST::lt(const ansStl::cST &cmp)
+{
+	if (_uid != _StrDataUidC_) _lxBreak_();
+	if ((cmp.sWBuf) && (sWBuf))
+		return (wcscmp(sWBuf, cmp.sWBuf) < 0);
+	if ((cmp.sBuf) && (sBuf))
+		return (strcmp(sBuf, cmp.sBuf) < 0);
+	return false;
+}
+bool cST::gt(const ansStl::cST &cmp)
+{
+	if (_uid != _StrDataUidC_) _lxBreak_();
+	if ((cmp.sWBuf) && (sWBuf))
+		return (wcscmp(sWBuf, cmp.sWBuf) > 0);
+	if ((cmp.sBuf) && (sBuf))
+		return (strcmp(sBuf, cmp.sBuf) > 0);
+	return false;
+}
+
 
 bool cST::compare(ansStl::cST &scmp)
 {

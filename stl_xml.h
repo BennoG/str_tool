@@ -198,7 +198,8 @@ public:
 	int getMachineConfigParameterInt(const char* parName,const int iDefault = 0);
 	int setModuleParameter(const double dVal,const char* module,const char* parName,...);
 	int setModuleParameter(const int iVal,const char* module,const char* parName,...);
-	int setModuleParameter(const char *sVal,const char* module,const char* parName,...);
+	int setModuleParameter(const char *sVal, const char* module, const char* parName, ...);
+	int setModuleParAttrib(const char *attValue,const char* module, const char *attName, const char* parName, ...);
 	int setModuleParameter(const ansStl::cST &sVal,const char* module,const char* parName,...);
 	int setCANDeviceParameter(int canBus,int canID,const char* sParName,const char *value);
 	int setCANDeviceParameter(int canBus,int canID,const char* sParName,int value);
@@ -209,8 +210,8 @@ public:
 	int getCANDeviceParFactor(int canBus,int canID,const char* sParName,...);
 	bool isValid(){return (cfgDoc != NULL);}
 
-protected:
 	void loadXml(const char *fileName = NULL);
+protected:
 	void parseSTP(STP sXmlData);
 private:
 	STP cfgGetXpathAXML(const char *pStr,va_list args_lst);
@@ -226,6 +227,7 @@ public:
 	STP cfgGetXpath(const char *sXpath);
 	STP cfgGetXpathf(const char *fmt,...);
 	int cfgGetXpathIntDf(int iDefault,const char *fmt,...);
+	double cfgGetXpathDoubleDf(double dDefault,const char *fmt,...);
 	stlXmlList *cfgGetXpathListf(const char *fmt,...);
 
 public:		// update of toevoegen van parameters aan xml

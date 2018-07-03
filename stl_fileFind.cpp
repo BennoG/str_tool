@@ -7,6 +7,8 @@
 #  include <sys/stat.h>
 #  include <stdio.h>
 #endif
+#include <vector>
+#include <algorithm>
 
 
 /*
@@ -202,9 +204,61 @@ int stlFindClose(struct stlFind_t *buf)
 
 #endif
 
+static bool my_sortTest(const ansStl::cST &v1,const ansStl::cST &v2) 
+{
+	return ((ansStl::cST &)v1) < v2;
+}
+
+std::vector<ansStl::cST> stlGetFilesAr(const char *zkp)
+{
+	std::vector<ansStl::cST> files;
+
+	struct stlFind_t AF;
+	int res = stlFindFirst(zkp, _stlFindNorm, &AF);
+	while (res == 0) {
+		files.push_back(AF.name);
+		res = stlFindNext(&AF);
+	}
+	stlFindClose(&AF);
+
+	std::sort(files.begin(), files.end(),my_sortTest);
+	return files;
+}
+std::vector<ansStl::cST> stlGetFilesDirAr(const char *zkp)
+{
+	ansStl::cST dir = zkp;
+	dir.convert('\\', '/');
+	dir.setDlm(-2, '/', "");
+
+	std::vector<ansStl::cST> files;
+
+	struct stlFind_t AF;
+	int res = stlFindFirst(zkp, _stlFindNorm, &AF);
+	while (res == 0) {
+		files.push_back(dir + AF.name);
+		res = stlFindNext(&AF);
+	}
+	stlFindClose(&AF);
+
+	std::sort(files.begin(), files.end(),my_sortTest);
+	return files;
+}
+
 // Get al files in specific dir (sorted)
 STP stlGetFiles(const char *zkp)
 {
+	std::vector<ansStl::cST> files = stlGetFilesAr(zkp);
+
+	STP aRes = stlSetSt("");
+	for (int i = 0; i < (int)files.size(); i++)
+	{
+		if (i) stlAppendCh(aRes, _D1);
+		STP f = files[i].getStp();
+		stlAppendStp(aRes, f);
+		stlFree(f);
+	}
+	return aRes;
+/*
 	int iVld;
 	int res;
 	struct stlFind_t AF;
@@ -221,4 +275,21 @@ STP stlGetFiles(const char *zkp)
 	if (aRes->iLen) return aRes;
 	stlFree(aRes);
 	return NULL;
+*/
+}
+
+// get al files in specific DIR including path (sorted)
+STP stlGetFilesDir(const char *zkp)
+{
+	std::vector<ansStl::cST> files = stlGetFilesDirAr(zkp);
+
+	STP aRes = stlSetSt("");
+	for (int i = 0; i < (int)files.size(); i++)
+	{
+		if (i) stlAppendCh(aRes, _D1);
+		STP f = files[i].getStp();
+		stlAppendStp(aRes,f);
+		stlFree(f);
+	}
+	return aRes;
 }

@@ -254,7 +254,7 @@ void stlPrintfSetHdlg(HWND hWnd,int iLstID)
 	hDlgWnd=hWnd;
 	iListID=iLstID;
 }
-void stlPrintfSetLogFn(char *sLogFn)
+void stlPrintfSetLogFn(const char *sLogFn)
 {
 	if (sLogFn){
 		memset(msgFn,0,sizeof(msgFn));
@@ -264,7 +264,7 @@ void stlPrintfSetLogFn(char *sLogFn)
 	}
 }
 
-void stlPrintfSetAppName(char *sName)
+void stlPrintfSetAppName(const char *sName)
 {
 	if (sName){
 		memset(appFn,0,sizeof(appFn));

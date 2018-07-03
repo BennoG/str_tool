@@ -1,3 +1,25 @@
+/obj-arm
+/obj-arm64
+/vs2005/Debug
+/vs2005/Release
+/vs2005/*.user
+/vs2010/Debug
+/vs2010/Release
+/vs2010/x64/Debug
+/vs2010/x64/Release
+/vs2010/x64Debug
+/vs2015/Debug
+/vs2015/Release/libStl15.tlog/*.tlog
+/vs2015/x64/Debug
+/vs2015/x64/Release
+/plugin/.cvsignore
+/licence
+.cvsignore
+*.ncb
+*.suo
+Debug
+Release
+*.user
 # Header dependencies
 .depend
 

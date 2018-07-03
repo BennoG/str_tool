@@ -125,6 +125,9 @@ static void _EventTask(void *pDummy)
 #ifdef __arm__
 	if (eventWarn < 8000) eventWarn = 8000;
 #endif	// __arm__
+#ifdef __linux__
+	if (eventWarn < 8000) eventWarn = 8000;
+#endif
 
 
 	while (_eventRunThread_)

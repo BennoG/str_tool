@@ -86,8 +86,8 @@ void stlPrintfSetMsTimes(int iOn);
 void stlPrintfThread();				// do printing in separate thread. no time delay on printf commands
 void stlPrintfSetFile(FILE *fOut);
 void stlPrintfSetHdlg(HWND hWnd,int iLstID);
-void stlPrintfSetLogFn(char *sLogFn);
-void stlPrintfSetAppName(char *sName);
+void stlPrintfSetLogFn(const char *sLogFn);
+void stlPrintfSetAppName(const char *sName);
 int  stlPrintf(const char *format , ... );
 
 extern int printfLogRotCount;	// default rotate to .old if count >= 0 rotate from count up never cleanup

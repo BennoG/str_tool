@@ -169,9 +169,15 @@ int testPidLock(const char *_LockFile_)
 */
 int stlPrintfBackgroundActive=0;
 int is_daemon=0;
+
+int printfLogRotCount = -1;
+int printfLogRotSize  = 4000000;
+
 static int   showMsTimes = 0;
 static void (*printfHandler)(STP)=NULL;	
 static void (*printfHandler2)(struct stlLogInfoStruct *)=NULL;	
+static char msgFn[150]="";
+static char appFn[150]="";
 
 static void initWarnInfo(struct stlLogInfoStruct *wi)
 {
@@ -200,38 +206,92 @@ static void initWarnInfo(struct stlLogInfoStruct *wi)
 #endif
 }
 
-static void processWarnInfo(struct stlLogInfoStruct *wi)
+static void processWarnInfo(struct stlLogInfoStruct *WI)
 {
-	if ((wi == NULL) || (wi->sMsg == NULL)) return;
+	static stlMutex mux =stlMutexInitializer;	// For writing to file
+
+	if ((WI == NULL) || (WI->sMsg == NULL)) return;
 
 	if (printfHandler)
-		printfHandler(wi->sMsg);
+		printfHandler(WI->sMsg);
 	if (printfHandler2)
-		printfHandler2(wi);
+		printfHandler2(WI);
 
-	if ((wi->sMsg) && (wi->sMsg->iLen > 0))		// als printf handler lengte naar 0 heeft gezet doen we niets.
+	if ((WI->sMsg) && (WI->sMsg->iLen > 0))		// als printf handler lengte naar 0 heeft gezet doen we niets.
 	{
 		if (is_daemon){
 			if (showMsTimes)
-				syslog(LOG_WARNING,"[%05X]: ;%u; %s", wi->threadID, wi->msTime, wi->sMsg->sBuf);
+				syslog(LOG_WARNING,"[%05X]: ;%u; %s", WI->threadID, WI->msTime, WI->sMsg->sBuf);
 			else
-				syslog(LOG_WARNING,"[%05X]: %s", wi->threadID, wi->sMsg->sBuf);
+				syslog(LOG_WARNING,"[%05X]: %s", WI->threadID, WI->sMsg->sBuf);
 		}else{
-			int iLF = stlCount(wi->sMsg,10);
+			int iLF = stlCount(WI->sMsg,10);
 			if (showMsTimes)
 			{
-				if (iLF) fprintf(stdout,"[%4d]:;%u; %s"  ,wi->threadID,wi->msTime,wi->sMsg->sBuf);
-				else     fprintf(stdout,"[%4d]:;%u; %s\n",wi->threadID,wi->msTime,wi->sMsg->sBuf);
+				if (iLF) fprintf(stdout,"[%4d]:;%u; %s"  ,WI->threadID,WI->msTime,WI->sMsg->sBuf);
+				else     fprintf(stdout,"[%4d]:;%u; %s\n",WI->threadID,WI->msTime,WI->sMsg->sBuf);
 			}else
 			{
-				if (iLF) fprintf(stdout,"[%4d]: %s"  ,wi->threadID,wi->sMsg->sBuf);
-				else     fprintf(stdout,"[%4d]: %s\n",wi->threadID,wi->sMsg->sBuf);
+				if (iLF) fprintf(stdout,"[%4d]: %s"  ,WI->threadID,WI->sMsg->sBuf);
+				else     fprintf(stdout,"[%4d]: %s\n",WI->threadID,WI->sMsg->sBuf);
 			}
 			fflush(stdout);
 		}
 	}
-	stlFree(wi->sMsg);
-	wi->sMsg = NULL;
+
+	if (msgFn[0]){
+		int i;
+		FILE *f1=NULL;
+		STP Tm1 = NULL;
+		if (WI->msTime)
+			Tm1 = stlSetStf("\n%02d-%02d %02d:%02d:%02d;%07d;%s[%s]; ",WI->datM,WI->datD,WI->timH,WI->timM,WI->timS,WI->msTime,appFn,WI->sNam);
+		else
+			Tm1=stlSetStf("\n%04d-%02d-%02d %02d:%02d:%02d %s[%s]: ",WI->datY,WI->datM,WI->datD,WI->timH,WI->timM,WI->timS,appFn,WI->sNam);
+		// Voeg aan messages bestand toe
+		for (i=0;i<5;i++){
+			stlMutexLock(&mux);
+			f1=fopen(msgFn,"ab");
+			if (f1) break;
+			stlMutexUnlock(&mux);
+			stlMsWait(10);
+		}
+		if (f1){
+			int nri=stlCountChr(WI->sMsg->sBuf,_D1)+1;
+			for (i=1;i<=nri;i++){
+				STP Tm2=stlGetStr(WI->sMsg,i,0,0);
+				if (Tm2->iLen){
+					fwrite(Tm1->sBuf,1,Tm1->iLen,f1);
+					fwrite(Tm2->sBuf,1,Tm2->iLen,f1);
+				}
+				stlFree(Tm2);
+			}
+			i=ftell(f1);	// Grootte van het bestand.
+			fclose(f1);
+			if (i > printfLogRotSize){	// Meer dan 4 Mb (backup naar .old)
+				STP Tm2 = NULL;
+				if (printfLogRotCount>=0)
+				{
+					while (1)
+					{
+						Tm2 = stlSetStf("%s.%04d",msgFn,printfLogRotCount++);
+						f1 = fopen(Tm2->sBuf,"rb");
+						if (f1 == NULL) break;
+						fclose(f1);
+						stlFree(Tm2);
+					}
+				}else 
+					Tm2 = stlSetStf("%s.old",msgFn);
+				unlink(Tm2->sBuf);
+				rename(msgFn,Tm2->sBuf);
+				stlFree(Tm2);
+			}
+			stlMutexUnlock(&mux);
+		}
+		stlFree(Tm1);
+	}
+
+	stlFree(WI->sMsg);
+	WI->sMsg = NULL;
 }
 
 /* Set user handler for printf output of application
@@ -249,6 +309,16 @@ void stlPrintfSetMsTimes(int iOn)
 {
 	showMsTimes = iOn;
 }
+void stlPrintfSetLogFn(const char *sLogFn)
+{
+	if (sLogFn){
+		memset(msgFn,0,sizeof(msgFn));
+		strncpy(msgFn,sLogFn,sizeof(msgFn)-1);
+	}else{
+		msgFn[0]=0;
+	}
+}
+
 
 
 #define _MaxWarnHist_	3000
@@ -370,7 +440,6 @@ void stlDeamonize(void)
 */
 int puts(const char *s)
 {
-#ifdef _NEW_HDLR_
 	struct stlLogInfoStruct WI;
 	initWarnInfo(&WI);
 	WI.sMsg = stlSetSt(s);
@@ -378,14 +447,6 @@ int puts(const char *s)
 		queueWarnInfo(&WI);
 	else
 		processWarnInfo(&WI);
-#else
-	if (is_daemon){
-		syslog(LOG_WARNING,"%s",s);
-	}else{
-		fprintf(stdout,"%s\n",s);
-		fflush(stdout);
-	}
-#endif
 	return 0;
 }
 
@@ -413,7 +474,6 @@ int printf(const char *format, ...)
 */
 int stlPrintf(const char *format, ...)
 {
-#ifdef _NEW_HDLR_
 	va_list ap;
 	struct stlLogInfoStruct WI;
 	initWarnInfo(&WI);
@@ -428,43 +488,8 @@ int stlPrintf(const char *format, ...)
 		processWarnInfo(&WI);
 
 	return 0;
-#else
-	int len;
-	char *buf;
-	va_list ap;
-
-	buf=malloc(2048);
-	if (buf==NULL) return 0;
-	memset(buf,0,2048);
-
-	va_start(ap,format);
-	len=vsnprintf(buf,2040,format,ap);
-	va_end(ap);
-	if (len>2040) len=2040;
-
-	if (is_daemon){
-		syslog(LOG_WARNING,"[%05X]: %s",(((int)pthread_self())>>12) & 0xFFFFF, buf);
-	}else{
-		int i,tid;
-		for (i=0; i<len; i++){
-			if (buf[i]==10) len=0;
-			if (buf[i]==13) len=0;
-		}
-		tid = (int)syscall(SYS_gettid);
-
-		if (len) fprintf(stdout,"[%4d]: %s\n",tid ,buf);
-		else     fprintf(stdout,"[%4d]: %s"  ,tid ,buf);
-
-//		if (len) fprintf(stdout,"[%05X]: %s\n",(((int)pthread_self())>>12) & 0xFFFFF,buf);
-//		else     fprintf(stdout,"[%05X]: %s"  ,(((int)pthread_self())>>12) & 0xFFFFF,buf);
-		//if (len) fprintf(stdout,"%s\n",buf);
-		//else     fprintf(stdout,"%s",buf);
-		fflush(stdout);
-	}
-	free(buf);
-	return len;
-#endif
 }
+
 /* sets system wide lock so application can only be running once
 **  _LockFile_   complete path to where the lock is located (linux style)
 */
@@ -478,6 +503,7 @@ int setPidLock(const char *_LockFile_)
 	}
 	return 0;
 }
+
 /* Test of application already running
 **  _LockFile_   complete path to where the lock is located (linux style)
 */

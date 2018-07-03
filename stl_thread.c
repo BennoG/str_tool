@@ -268,9 +268,9 @@ static void *StartTask(void *p)
 	struct threadIdData *TD=p;
 	pthread_detach(pthread_self());
 	TD->iPid=stlGetThreadId();
-	printf("stlThreadStart %d (%s)",(((int)pthread_self())>>12) & 0xFFFFF,TD->sName);
+	//printf("stlThreadStart %d (%s)",(((int)pthread_self())>>12) & 0xFFFFF,TD->sName);
 	TD->start_address(TD->pData);
-	printf("stlThreadStop %d (%s)",(((int)pthread_self())>>12) & 0xFFFFF,TD->sName);
+	//printf("stlThreadStop %d (%s)",(((int)pthread_self())>>12) & 0xFFFFF,TD->sName);
 	memset(TD,0,sizeof(struct threadIdData));
 	pthread_exit(NULL);
 }

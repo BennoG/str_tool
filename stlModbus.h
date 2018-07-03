@@ -137,7 +137,9 @@ namespace ansStl
 		**    sData   Data to write
 		**    iType   one of the modbusRead* types 
 		*/
-		virtual int modbusWriteData(int iStart,STP sData,mbCmd iType,int iTimeOut=250);
+		virtual int modbusWriteData(int iStart, STP sData, mbCmd iType, int iTimeOut = 250);
+		virtual int modbusWriteData(int iStart, ansStl::cST &sData,mbCmd iType,int iTimeOut=250);
+		virtual STP modbusReadWrite(int iRdStart, int iRdLen, int iWrStart, ansStl::cST &sData, int iTimeOut = 250);
 
 		virtual bool isConnectd(){return (con != NULL);}
 	private:

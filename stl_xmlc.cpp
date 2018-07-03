@@ -383,6 +383,19 @@ int stlXml::cfgGetXpathIntDf(int iDefault,const char *fmt,...)
 	stlFree(sRes);
 	return iDefault;
 }
+double stlXml::cfgGetXpathDoubleDf(double dDefault,const char *fmt,...)
+{
+	if (_uid != _StrXmlUidC_) _lxBreak_();
+	va_list ap;
+	va_start(ap,fmt);
+	STP sRes = cfgGetXpathA(fmt,ap);
+	va_end(ap);
+	if ((sRes)&&(sRes->iLen))
+		dDefault = strtod(sRes->sBuf,NULL);
+	stlFree(sRes);
+	return dDefault;
+}
+
 STP stlXml::getModuleParameter(const char* module,const char* parName)
 {
 	if (_uid != _StrXmlUidC_) _lxBreak_();
@@ -469,6 +482,20 @@ int stlXml::setModuleParameter(const int iVal,const char* module,const char* par
 	stlFree(va);
 	return iRes;
 }
+
+int stlXml::setModuleParAttrib(const char *attValue,const char* module, const char *attName, const char* parName, ...)
+{
+	if (_uid != _StrXmlUidC_) _lxBreak_();
+	va_list ap;
+	va_start(ap, parName);
+	STP xp = stlSetSta(parName, ap);
+	va_end(ap);
+	int iRes = cfgSetXpathf(attValue,"/config/machine/modules/module[@id='%s']/param[@id='%s']/@%s", module, xp->sBuf, attName);
+	stlFree(xp);
+	return iRes;
+}
+
+
 int stlXml::setModuleParameter(const char *sVal,const char* module,const char* parName,...)
 {
 	if (_uid != _StrXmlUidC_) _lxBreak_();

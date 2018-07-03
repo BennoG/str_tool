@@ -1,5 +1,9 @@
 #include "stl_str.h"
 
+#ifdef  __cplusplus
+#  include <vector>
+#endif
+
 #ifdef _WIN32
 
 #endif
@@ -38,7 +42,15 @@ int stlFindClose(struct stlFind_t *buf);
 
 // Get al files in specific DIR (sorted)
 STP stlGetFiles(const char *zkp);
+// get al files in specific DIR including path (sorted)
+STP stlGetFilesDir(const char *zkp);
 
 #ifdef  __cplusplus
 }
+#endif
+
+
+#ifdef  __cplusplus
+std::vector<ansStl::cST> stlGetFilesAr(const char *zkp);
+std::vector<ansStl::cST> stlGetFilesDirAr(const char *zkp);
 #endif
