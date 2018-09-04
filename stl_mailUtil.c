@@ -79,6 +79,7 @@ static char *tzoffset(time_t *now)
 
 /* The two currently defined translation tables.  The first is the
 standard uuencoding, the second is base64 encoding.  */
+/*
 static const char uu_std[64] =
 {
 	'`', '!', '"', '#', '$', '%', '&', '\'',
@@ -90,6 +91,7 @@ static const char uu_std[64] =
 	'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W',
 	'X', 'Y', 'Z', '[', '\\', ']', '^', '_'
 };
+*/
 
 static const char uu_base64[64] =
 {

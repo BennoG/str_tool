@@ -448,10 +448,9 @@ static int stlCountXP(STP sV1,char ch)
 	return iRes;
 }
 
-
 static int stlXmlAddNodeTree(xmlXPathContextPtr xDoc,const char *sPat,xmlNodePtr *xAddedNode,xmlChar *xContent)
 {
-	xmlNodePtr  xNod;
+	xmlNodePtr  xNod = NULL;
 	xmlXPathObjectPtr  xObjs;
 	int iLvl,iErr=0,i;
 	STP sPath,sNode,sName=NULL;

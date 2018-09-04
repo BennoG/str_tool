@@ -655,7 +655,7 @@ static STP _sqlDoQuery(struct sqlConTableStruct *pCon,int *lstId)
 		stlConvert(sQr,'\r',' ');
 		stlSingle (sQr,' ');
 		if (sQr==NULL) sQr=stlSetSt("NULL");
-		if (sQr->iLen > 250) sQr->iLen=250; sQr->sBuf[sQr->iLen]=0;
+		if (sQr->iLen > 250){ sQr->iLen=250; sQr->sBuf[sQr->iLen]=0; }
 		printf("Warning SQL Query %d ms %s\n",iTime,sQr->sBuf);
 		stlFree(sQr);
 	}
@@ -809,7 +809,7 @@ STP stlSqlConQuery(STP sQuery,int iFlags,int *iLastId,STP *sParams,int iParCnt,i
 	stlConvert(sQshort,'\r',' ');
 	stlSingle (sQshort,' ');
 	if (sQshort==NULL) sQshort=stlSetSt("NULL");
-	if (sQshort->iLen > 250) sQshort->iLen=250; sQshort->sBuf[sQshort->iLen]=0;
+	if (sQshort->iLen > 250){ sQshort->iLen=250; sQshort->sBuf[sQshort->iLen]=0; }
 
 	pCon=_sqlGetCon(iConn);
 	if ((pCon->iDbFlags & _DbFlgSqlTimeout_) || (stlSqlLockTimeout>0))

@@ -170,6 +170,7 @@ int stlXml::saveDocument(const char *fn /* = NULL */)
 	stlMutexLock(&docMux);
 	if ((fn)&&(fn[0]))
 	{
+		if (sFileName == NULL) sFileName = stlSetSt(fn);
 		unlink(fn);
 		xmlSaveFormatFile(fn,cfgDoc,1);
 	}else if (sFileName)

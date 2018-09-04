@@ -859,6 +859,7 @@ namespace ansStl
 		void set(const std::string &val);
 		void set(const char *val);
 		void set(const wchar_t *val);
+		void consume(STP p){ set(p,true); }
 
 		void setf(const wchar_t *p,...);
 		void setf(const char  *p,...);

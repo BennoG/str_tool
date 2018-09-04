@@ -269,8 +269,9 @@ STP stlModbusTcp::_waitReponce(int &iError,int iTimeOut /* = 250 */)
 
 	int iDaIdx = getDataWord(sHdr,0);
 	if (iDaIdx != iMsgIdx) return _waitReponce(iError,iTimeOut);		// verkeerde volgnummer probeer volgende datagram
-	if (sData[0] == 4) sData.insDel(0,-2);		// 1e 2 bytes weg halen
-	if (sData[0] == 6) sData.insDel(0,-3);		// 1e 3 bytes weg halen
+	if (sData[0] == _modbusReadWriteRegisters ) sData.insDel(0, -2);
+	if (sData[0] == _modbusReadInputRegister  ) sData.insDel(0, -2);		// 1e 2 bytes weg halen
+	if (sData[0] == _modbusWriteSingleRegister) sData.insDel(0, -3);		// 1e 3 bytes weg halen
 	return sData.getStp();
 }
 

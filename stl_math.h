@@ -1,8 +1,8 @@
 #ifndef _STL_MATH_H_
 #define _STL_MATH_H_
 
-#include "stl_str.h"
 #include <vector>
+#include "stl_str.h"
 
 #ifdef  __cplusplus
 

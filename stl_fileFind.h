@@ -51,6 +51,8 @@ STP stlGetFilesDir(const char *zkp);
 
 
 #ifdef  __cplusplus
+/* find all files in specified search pattern, filenames only not directory of search path */
 std::vector<ansStl::cST> stlGetFilesAr(const char *zkp);
+/* find all files in specified search pattern, filenames and directory from search path */
 std::vector<ansStl::cST> stlGetFilesDirAr(const char *zkp);
 #endif
